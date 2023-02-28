@@ -1,6 +1,6 @@
 
 #[cfg(test)]
-mod tests {
+mod vector_tests {
     extern crate linearalgebra;
 
     use linearalgebra::vector::*;
@@ -53,5 +53,56 @@ mod tests {
         assert_eq!(v.sub(&v2).unwrap().as_vec(), &vec![2,1,-4]);
         assert_eq!(v.as_vec(), &vec![3,4,5]); // Preserve old
         assert_eq!(v2.as_vec(), &vec![1,3,9]); // Preserve old
+    }
+
+    #[test]
+    fn zeroes_test() {
+        let v = Vector::<i32>::zeroes(10);
+
+        assert_eq!(v.as_vec(), &vec![0i32; 10]);
+    }
+
+    #[test]
+    fn ones_test() {
+        let v = Vector::<i32>::ones(10);
+
+        assert_eq!(v.as_vec(), &vec![1i32; 10]);
+    }
+
+    #[test]
+    fn unit_vector_success_test() {
+        let v = Vector::<i32>::cartesian_unit_vector(1, 5).unwrap();
+
+        assert_eq!(v.as_vec(), &vec![1,0,0,0,0]);
+    }
+
+    #[test]
+    fn unit_vector_fail_test() {
+        let v = Vector::<i32>::cartesian_unit_vector(6, 5);
+
+        assert!(v.is_err())
+    }
+
+    #[test]
+    fn dot_success_test() {
+        let v = Vector::new(vec![3,4,5]);
+        let v2 = Vector::new(vec![1,3,9]);
+
+        assert_eq!(v.dot(&v2).unwrap(), 60);
+    }
+
+    #[test]
+    fn dot_fail_test() {
+        let v = Vector::new(vec![3,4,5]);
+        let v2 = Vector::new(vec![1,3,9,1]);
+
+        assert!(v.dot(&v2).is_err());
+    }
+
+    #[test]
+    fn abs_test() {
+        let v = Vector::new(vec![3.0,4.0]);
+
+        assert_eq!(v.abs(), 5.0);
     }
 }
