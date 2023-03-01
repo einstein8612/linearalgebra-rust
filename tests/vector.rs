@@ -1,4 +1,3 @@
-
 #[cfg(test)]
 mod vector_tests {
     extern crate linearalgebra;
