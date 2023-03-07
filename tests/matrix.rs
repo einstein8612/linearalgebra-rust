@@ -38,6 +38,96 @@ mod matrix_tests {
     }
 
     #[test]
+    fn get_row_success_test() {
+        let matrix = Matrix::new(3, 3, vec![
+            1, 1, 2,
+            3, 4, 5,
+            6, 1, 2
+        ]).unwrap();
+
+        assert_eq!(matrix.get_row(0).unwrap(), Vector::new(vec![1, 1, 2]))
+    }
+
+    #[test]
+    fn get_row_fail_test() {
+        let matrix = Matrix::new(3, 3, vec![
+            1, 1, 2,
+            3, 4, 5,
+            6, 1, 2
+        ]).unwrap();
+
+        assert!(matrix.get_row(6).is_err());
+    }
+
+    #[test]
+    fn get_rows_test() {
+        let matrix = Matrix::new(3, 3, vec![
+            1, 1, 2,
+            3, 4, 5,
+            6, 1, 2
+        ]).unwrap();
+
+        assert_eq!(
+            matrix.get_rows(),
+            vec![
+                Vector::new(vec![1, 1, 2]),
+                Vector::new(vec![3, 4, 5]),
+                Vector::new(vec![6, 1, 2]),
+            ]
+        )
+    }
+
+    #[test]
+    fn matrix_vector_product_fail_test() {
+        let matrix = Matrix::new(3, 3, vec![1, 1, 2, 3, 4, 5, 6, 1, 2]).unwrap();
+        let vector = Vector::new(vec![1,4,1,1]);
+        
+        assert!(matrix.product_vector(&vector).is_err())
+    }
+
+    #[test]
+    fn matrix_vector_product_test() {
+        let matrix = Matrix::new(3, 3, vec![1, 1, 2, 3, 4, 5, 6, 1, 2]).unwrap();
+        let vector = Vector::new(vec![1,4,1]);
+        
+        assert_eq!(matrix.product_vector(&vector).unwrap(), Vector::new(vec![7, 24, 12]))
+    }
+
+    #[test]
+    fn matrix_matrix_product_test() {
+        let matrix = Matrix::new(3, 3, vec![
+            1, 1, 2,
+            3, 4, 5,
+            6, 1, 2
+        ]).unwrap();
+        let matrix2 = Matrix::new(3, 3, vec![
+            1, 9, 2,
+            7, 1, 5,
+            3, 8, 2
+        ]).unwrap();
+
+        assert_eq!(matrix.product_matrix(&matrix2).unwrap().as_vec(),
+            &vec![
+                14, 26, 11,
+                46, 71, 36,
+                19, 71, 21
+            ]
+        )
+    }
+
+    #[test]
+    fn transpose_nonsquare_test() {
+        let matrix = Matrix::new(3, 2, vec![1,2,3,4,5,6]).unwrap();
+        assert_eq!(matrix.transpose().as_vec(), &vec![1,4,2,5,3,6])
+    }
+
+    #[test]
+    fn transpose_square_test() {
+        let matrix = Matrix::new(3, 3, vec![1,2,3,4,5,6,7,8,9]).unwrap();
+        assert_eq!(matrix.transpose().as_vec(), &vec![1,4,7,2,5,8,3,6,9])
+    }
+
+    #[test]
     fn display_3x3_test() {
         let matrix = Matrix::new(3, 3, vec![1, 1, 2, 3, 4, 5, 6, 1, 2]).unwrap();
 

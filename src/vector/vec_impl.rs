@@ -14,6 +14,10 @@ impl<T> Vector<T> {
         &self.data
     }
 
+    pub fn as_mut_vec(&mut self) -> &mut Vec<T> {
+        &mut self.data
+    }
+
     pub const fn len(&self) -> usize {
         self.size
     }
