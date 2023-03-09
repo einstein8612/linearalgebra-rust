@@ -45,6 +45,10 @@ fn matrix_trivial_multiplication_bench(b: &mut Bencher) {
     })
 }
 
+/**
+ * Test to see how shit my performance is compared to just calling numpy
+ * this is badly implemented though to make me feel better
+ */
 #[bench]
 fn big_matrix_multiplication_numpy_test(b: &mut Bencher) {
     let (m1, m2) = setup(3000 * 32);
