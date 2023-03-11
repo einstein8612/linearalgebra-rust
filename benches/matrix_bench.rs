@@ -19,7 +19,7 @@ fn setup(len: usize) -> (Vec<f64>, Vec<f64>) {
 }
 
 #[bench]
-fn matrix_multiplication_bench(b: &mut Bencher) {
+fn matrix_simple_multiplication_bench(b: &mut Bencher) {
 
     let (m1,m2) = setup(3000 * 32);
 
@@ -27,7 +27,20 @@ fn matrix_multiplication_bench(b: &mut Bencher) {
     let matrix2 = Matrix::new(32, 3000, m2).unwrap();
 
     b.iter(|| {
-        matrix1.product_matrix(&matrix2);
+        matrix1.simple_product_matrix(&matrix2);
+    })
+}
+
+#[bench]
+fn matrix_trivial_multiplication_bench(b: &mut Bencher) {
+
+    let (m1,m2) = setup(3000 * 32);
+
+    let matrix1 = Matrix::new(3000, 32, m1).unwrap();
+    let matrix2 = Matrix::new(32, 3000, m2).unwrap();
+
+    b.iter(|| {
+        matrix1.trivial_product_matrix(&matrix2);
     })
 }
 

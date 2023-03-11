@@ -1,8 +1,8 @@
 use std::ops::{Add, Mul};
 
-use crate::{vector::Vector, numlib::Zero};
+use crate::{numlib::Zero, vector::Vector};
 
- use super::Matrix;
+use super::Matrix;
 
 impl<T> Matrix<T> {
     pub fn new(width: usize, height: usize, data: Vec<T>) -> Result<Matrix<T>, &'static str> {
@@ -62,9 +62,9 @@ impl<T: Copy> Matrix<T> {
         }
 
         let mut vector: Vec<T> = Vec::with_capacity(self.width);
-        let index = number*self.width;
+        let index = number * self.width;
         for offset in 0..self.width {
-            vector.push(self.data[index+offset]);
+            vector.push(self.data[index + offset]);
         }
 
         Ok(Vector::new(vector))
@@ -80,7 +80,7 @@ impl<T: Copy> Matrix<T> {
     }
 }
 
-impl <T: Copy> Matrix<T> {
+impl<T: Copy> Matrix<T> {
     pub fn transpose(&self) -> Matrix<T> {
         let mut list = Vec::with_capacity(self.size);
         for col in self.get_cols() {
@@ -90,7 +90,7 @@ impl <T: Copy> Matrix<T> {
         let width = self.height;
         let height = self.width;
 
-        return Matrix::new(width, height, list).unwrap()
+        return Matrix::new(width, height, list).unwrap();
     }
 }
 
@@ -108,14 +108,48 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T>> Matrix<T> {
     }
 
     pub fn product_matrix(&self, other: &Matrix<T>) -> Result<Matrix<T>, &'static str> {
+        self.simple_product_matrix(other)
+    }
+
+    /**
+     * A simple multiplication algorithm using the provided methods
+     * for short and readable code
+     */
+    pub fn simple_product_matrix(&self, other: &Matrix<T>) -> Result<Matrix<T>, &'static str> {
         if self.width != other.height {
             return Err("Matrices have mismatched sizes");
         }
-        let mut res = Vec::with_capacity(self.height*other.width);
+        let mut res = Vec::with_capacity(self.height * other.width);
         for col in other.get_cols() {
             res.extend(self.product_vector(&col).unwrap().as_vec());
         }
 
-        Ok(Matrix::new(self.height, other.width, res).unwrap().transpose())
+        Ok(Matrix::new(self.height, other.width, res)
+            .unwrap()
+            .transpose())
+    }
+
+    /**
+     * All logic written locally here instead of spread out. Still using the logic of
+     * AB = Ab1 + Ab2 + ... + Abn
+     * O(T(n)) = n^3
+     */
+    pub fn trivial_product_matrix(&self, other: &Matrix<T>) -> Result<Matrix<T>, &'static str> {
+        if self.width != other.height {
+            return Err("Matrices have mismatched sizes");
+        }
+        let mut res = Vec::with_capacity(self.height * other.width);
+        for row in 0..self.height {
+            for col in 0..other.width {
+                let mut entry = T::zero();
+                for index in 0..self.width {
+                    entry = entry
+                        + self.data[self.width * row + index] * other.data[other.width * index + col];
+                }
+                res.push(entry);
+            }
+        }
+
+        Matrix::new(self.height, other.width, res)
     }
 }
