@@ -7,7 +7,6 @@ use std::time::Instant;
 
 use linearalgebra::matrix::Matrix;
 use rand::Rng;
-use rand::thread_rng;
 use test::Bencher;
 
 fn setup(len: usize) -> (Vec<f64>, Vec<f64>) {

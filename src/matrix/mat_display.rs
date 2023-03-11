@@ -10,9 +10,24 @@ const MATRIX_SIDE: char = '│';
 
 impl<T: Display> Display for Matrix<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut res = String::with_capacity((self.width * 2 + 3) * (self.height * 2 + 3));
+        let max_size = self
+            .data
+            .iter()
+            .map(|entry| format!("{}", entry).len())
+            .max()
+            .unwrap();
+
+        let to_display = self
+            .data
+            .iter()
+            .map(|entry| format!("{: <width$}", entry, width = max_size))
+            .collect::<Vec<String>>();
+
+        let mut res = String::with_capacity(
+            (self.width * max_size * 2 + 3) * (self.height * max_size * 2 + 3),
+        );
         res.push(MATRIX_TOP_LEFT_CORNER);
-        res.push_str(&" ".repeat(self.width * 2 + 1));
+        res.push_str(&" ".repeat(self.width * (max_size + 1) + 1));
         res.push(MATRIX_TOP_RIGHT_CORNER);
 
         // If 0 sized matrix don't worry about the inside stuff
@@ -31,7 +46,7 @@ impl<T: Display> Display for Matrix<T> {
                     printed = 0;
                 }
 
-                res.push_str(&format!("{} ", self.data.get(index).unwrap()));
+                res.push_str(&format!("{} ", to_display.get(index).unwrap()));
                 printed += 1;
             }
             res.push(MATRIX_SIDE);
@@ -39,7 +54,7 @@ impl<T: Display> Display for Matrix<T> {
 
         res.push('\n');
         res.push(MATRIX_BOTTOM_LEFT_CORNER);
-        res.push_str(&" ".repeat(self.width * 2 + 1));
+        res.push_str(&" ".repeat(self.width * (max_size + 1) + 1));
         res.push(MATRIX_BOTTOM_RIGHT_CORNER);
 
         write!(f, "{}", res)
