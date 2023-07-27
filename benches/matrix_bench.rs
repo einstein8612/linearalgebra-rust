@@ -32,6 +32,19 @@ fn matrix_simple_multiplication_bench(b: &mut Bencher) {
 }
 
 #[bench]
+fn matrix_trivial_big_multiplication_bench(b: &mut Bencher) {
+
+    let (m1,m2) = setup(384 * 384);
+
+    let matrix1 = Matrix::new(384, 384, m1).unwrap();
+    let matrix2 = Matrix::new(384, 384, m2).unwrap();
+
+    b.iter(|| {
+        matrix1.trivial_product_matrix(&matrix2)
+    })
+}
+
+#[bench]
 fn matrix_trivial_multiplication_bench(b: &mut Bencher) {
 
     let (m1,m2) = setup(3000 * 32);
@@ -44,6 +57,18 @@ fn matrix_trivial_multiplication_bench(b: &mut Bencher) {
     })
 }
 
+#[bench]
+fn matrix_trivial_multiplication_small_bench(b: &mut Bencher) {
+
+    let (m1,m2) = setup(40 * 40);
+
+    let matrix1 = Matrix::new(40, 40, m1).unwrap();
+    let matrix2 = Matrix::new(40, 40, m2).unwrap();
+
+    b.iter(|| {
+        matrix1.trivial_product_matrix(&matrix2);
+    })
+}
 
 #[test]
 fn big_matrix_multiplication_test() {
