@@ -29,6 +29,10 @@ impl<T> Matrix<T> {
     pub const fn height(&self) -> usize {
         self.height
     }
+
+    pub const fn shape(&self) -> (usize, usize) {
+        (self.height, self.width)
+    }
 }
 
 impl<T: Copy> Matrix<T> {
@@ -48,19 +52,17 @@ impl<T: Copy> Matrix<T> {
     pub fn new_of_supplier<F: FnMut() -> T>(
         width: usize,
         height: usize,
-        mut supplier: F
+        mut supplier: F,
     ) -> Result<Matrix<T>, &'static str> {
         Ok(Matrix {
             width,
             height,
             size: width * height,
-            data: (0..width*height).map(|_| supplier()).collect(),
+            data: (0..width * height).map(|_| supplier()).collect(),
         })
     }
 
-    pub fn apply<F: FnMut(&mut T)>(
-        &mut self, mut f: F,
-    ) {
+    pub fn apply<F: FnMut(&mut T)>(&mut self, mut f: F) {
         for i in self.data.iter_mut() {
             f(i);
         }
@@ -126,7 +128,7 @@ impl<T: Copy> Matrix<T> {
     }
 }
 
-impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T>> Matrix<T> {
+impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Output = T>> Matrix<T> {
     pub fn product_vector(&self, vector: &Vector<T>) -> Result<Vector<T>, &'static str> {
         if self.width != vector.len() {
             return Err("Vector and matrix have mismatched sizes");
@@ -184,6 +186,32 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T>> Matrix<T> {
         }
 
         Matrix::new(self.height, other.width, res)
+    }
+
+    pub fn add(&self, other: &Matrix<T>) -> Result<Matrix<T>, &'static str> {
+        if self.shape() != other.shape() {
+            return Err("Matrices have mismatched sizes");
+        }
+
+        let mut res: Vec<T> = Vec::with_capacity(self.size);
+        for (i, element) in self.data.iter().enumerate() {
+            res.push(*element + *other.data.get(i).unwrap());
+        };
+
+        Matrix::new(self.width, self.height, res)
+    }
+
+    pub fn sub(&self, other: &Matrix<T>) -> Result<Matrix<T>, &'static str> {
+        if self.shape() != other.shape() {
+            return Err("Matrices have mismatched sizes");
+        }
+
+        let mut res: Vec<T> = Vec::with_capacity(self.size);
+        for (i, element) in self.data.iter().enumerate() {
+            res.push(*element - *other.data.get(i).unwrap());
+        };
+
+        Matrix::new(self.width, self.height, res)
     }
 }
 
