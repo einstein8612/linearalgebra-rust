@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul};
+use std::{ops::{Add, Mul, Index}};
 
 use crate::{numlib::Zero, vector::Vector};
 
@@ -152,4 +152,12 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T>> Matrix<T> {
 
         Matrix::new(self.height, other.width, res)
     }
+}
+
+impl<T> Index<(usize,usize)> for Matrix<T> {
+    type Output = T;
+    fn index(&self, (row,col): (usize, usize)) -> &Self::Output {
+        &self.data[row*self.width + col]
+    }
+
 }
