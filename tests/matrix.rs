@@ -177,6 +177,21 @@ mod matrix_tests {
     }
 
     #[test]
+    fn add_test() {
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![1,2,3,4]).unwrap();
+        let matrix_2: Matrix<i32> = Matrix::new(2, 2, vec![3,2,1,4]).unwrap();
+        assert_eq!(&vec![4,4,4,8], matrix.add(&matrix_2).unwrap().as_vec())
+    }
+
+    #[test]
+    fn sub_test() {
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![1,2,3,4]).unwrap();
+        let matrix_2: Matrix<i32> = Matrix::new(2, 2, vec![3,2,1,4]).unwrap();
+
+        assert_eq!(&vec![-2, 0, 2, 0], matrix.sub(&matrix_2).unwrap().as_vec())
+    }
+
+    #[test]
     fn test_test() {
         let matrix: Matrix<i32> = Matrix::new(2, 2, vec![-4, -6, -2, 6]).unwrap();
         let matrix2: Matrix<i32> = Matrix::new(2, 2, vec![0, 2, -1, -2]).unwrap();
