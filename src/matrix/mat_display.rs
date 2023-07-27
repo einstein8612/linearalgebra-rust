@@ -10,12 +10,15 @@ const MATRIX_SIDE: char = '│';
 
 impl<T: Display> Display for Matrix<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let max_size = self
-            .data
-            .iter()
-            .map(|entry| format!("{}", entry).len())
-            .max()
-            .unwrap();
+        let max_size = if self.size != 0 {
+            self.data
+                .iter()
+                .map(|entry| format!("{}", entry).len())
+                .max()
+                .unwrap()
+        } else {
+            0
+        };
 
         let to_display = self
             .data
