@@ -3,6 +3,13 @@ name = "linearalgebra"
 version = "0.1.0"
 edition = "2021"
 
+license = "MIT"
+description = "Test project to learn Rust and implement a small library for linear algebra"
+homepage = "https://github.com/einstein8612/linearalgebra-rust/"
+documentation = "https://github.com/einstein8612/linearalgebra-rust/"
+repository = "https://github.com/einstein8612/linearalgebra-rust/"
+readme = "README.md"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
