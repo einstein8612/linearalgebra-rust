@@ -162,6 +162,21 @@ mod matrix_tests {
     }
 
     #[test]
+    fn apply_test() {
+        let mut matrix: Matrix<i32> = Matrix::new(3, 3, vec![4,5,1,2,3,1,5,1,9]).unwrap();
+
+        assert_eq!(3, matrix[(1,1)]);
+        matrix.apply(|x| *x = *x*2);
+        assert_eq!(6, matrix[(1,1)]);
+    }
+
+    #[test]
+    fn supplier_test() {
+        let matrix: Matrix<i32> = Matrix::new_of_supplier(3, 3, || 10).unwrap();
+        assert_eq!(&vec![10;9], matrix.as_vec())
+    }
+
+    #[test]
     fn test_test() {
         let matrix: Matrix<i32> = Matrix::new(2, 2, vec![-4, -6, -2, 6]).unwrap();
         let matrix2: Matrix<i32> = Matrix::new(2, 2, vec![0, 2, -1, -2]).unwrap();
