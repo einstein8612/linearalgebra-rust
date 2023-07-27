@@ -2,6 +2,8 @@
 mod matrix_tests {
     extern crate linearalgebra;
 
+    use std::ops::Index;
+
     use linearalgebra::matrix::*;
     use linearalgebra::vector::*;
 
@@ -149,6 +151,29 @@ mod matrix_tests {
         let matrix: Matrix<i32> = Matrix::new(0, 0, vec![]).unwrap();
 
         assert_eq!("┌ ┐\n└ ┘", matrix.to_string())
+    }
+
+    #[test]
+    fn indexed_access_test() {
+        let matrix: Matrix<i32> = Matrix::new(3, 3, vec![4,5,1,2,3,1,5,1,9]).unwrap();
+
+        assert_eq!(3, matrix[(1,1)]);
+        assert_eq!(3, *matrix.index((1,1)))
+    }
+
+    #[test]
+    fn apply_test() {
+        let mut matrix: Matrix<i32> = Matrix::new(3, 3, vec![4,5,1,2,3,1,5,1,9]).unwrap();
+
+        assert_eq!(3, matrix[(1,1)]);
+        matrix.apply(|x| *x = *x*2);
+        assert_eq!(6, matrix[(1,1)]);
+    }
+
+    #[test]
+    fn supplier_test() {
+        let matrix: Matrix<i32> = Matrix::new_of_supplier(3, 3, || 10).unwrap();
+        assert_eq!(&vec![10;9], matrix.as_vec())
     }
 
     #[test]

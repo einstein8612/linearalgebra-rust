@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul};
+use std::ops::{Add, Index, Mul};
 
 use crate::{numlib::Zero, vector::Vector};
 
@@ -32,6 +32,40 @@ impl<T> Matrix<T> {
 }
 
 impl<T: Copy> Matrix<T> {
+    pub fn new_of_element(
+        width: usize,
+        height: usize,
+        element: T,
+    ) -> Result<Matrix<T>, &'static str> {
+        Ok(Matrix {
+            width,
+            height,
+            size: width * height,
+            data: vec![element; width * height],
+        })
+    }
+
+    pub fn new_of_supplier<F: FnMut() -> T>(
+        width: usize,
+        height: usize,
+        mut supplier: F
+    ) -> Result<Matrix<T>, &'static str> {
+        Ok(Matrix {
+            width,
+            height,
+            size: width * height,
+            data: (0..width*height).map(|_| supplier()).collect(),
+        })
+    }
+
+    pub fn apply<F: FnMut(&mut T)>(
+        &mut self, mut f: F,
+    ) {
+        for i in self.data.iter_mut() {
+            f(i);
+        }
+    }
+
     pub fn get_col(&self, number: usize) -> Result<Vector<T>, &'static str> {
         if number >= self.width {
             return Err("This column isn't present in this matrix");
@@ -78,9 +112,7 @@ impl<T: Copy> Matrix<T> {
 
         return res;
     }
-}
 
-impl<T: Copy> Matrix<T> {
     pub fn transpose(&self) -> Matrix<T> {
         let mut list = Vec::with_capacity(self.size);
         for col in self.get_cols() {
@@ -144,12 +176,20 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T>> Matrix<T> {
                 let mut entry = T::zero();
                 for index in 0..self.width {
                     entry = entry
-                        + self.data[self.width * row + index] * other.data[other.width * index + col];
+                        + self.data[self.width * row + index]
+                            * other.data[other.width * index + col];
                 }
                 res.push(entry);
             }
         }
 
         Matrix::new(self.height, other.width, res)
+    }
+}
+
+impl<T> Index<(usize, usize)> for Matrix<T> {
+    type Output = T;
+    fn index(&self, (row, col): (usize, usize)) -> &Self::Output {
+        &self.data[row * self.width + col]
     }
 }
