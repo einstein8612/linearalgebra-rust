@@ -192,6 +192,12 @@ mod matrix_tests {
     }
 
     #[test]
+    fn sum_test() {
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![9,2,3,4]).unwrap();
+        assert_eq!(18, matrix.sum())
+    }
+
+    #[test]
     fn test_test() {
         let matrix: Matrix<i32> = Matrix::new(2, 2, vec![-4, -6, -2, 6]).unwrap();
         let matrix2: Matrix<i32> = Matrix::new(2, 2, vec![0, 2, -1, -2]).unwrap();
