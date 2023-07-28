@@ -234,7 +234,7 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
             sum.push(accumulator);
         }
         
-        return Vector::new(sum);
+        return Matrix::new(self.width, 1, sum).unwrap();
     }
 
     pub fn sum_rows(&self) -> Vector<T> {
