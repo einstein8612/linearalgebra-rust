@@ -213,6 +213,14 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
 
         Matrix::new(self.width, self.height, res)
     }
+
+    pub fn sum(&self) -> T {
+        let mut accumulator: T = T::zero();
+        for el in self.data.iter(){
+            accumulator = accumulator + *el;
+        };
+        accumulator
+    }
 }
 
 impl<T> Index<(usize, usize)> for Matrix<T> {
