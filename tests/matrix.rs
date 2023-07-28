@@ -228,6 +228,21 @@ mod matrix_tests {
     }
 
     #[test]
+    fn sum_columns_test() {
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![9,2,3,4]).unwrap();
+        let sum = matrix.sum_columns();
+        assert_eq!(&vec![12,6], sum.as_vec());
+        assert_eq!((1,2), sum.shape())
+    }
+
+    #[test]
+    fn sum_rows_test() {
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![9,2,3,4]).unwrap();
+        let sum = matrix.sum_rows();
+        assert_eq!(&vec![11,7], sum.as_vec());
+    }
+
+    #[test]
     fn test_test() {
         let matrix: Matrix<i32> = Matrix::new(2, 2, vec![-4, -6, -2, 6]).unwrap();
         let matrix2: Matrix<i32> = Matrix::new(2, 2, vec![0, 2, -1, -2]).unwrap();
