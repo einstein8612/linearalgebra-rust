@@ -94,6 +94,28 @@ mod matrix_tests {
     }
 
     #[test]
+    fn matrix_trivial_matrix_product_test() {
+        let matrix = Matrix::new(3, 3, vec![1, 1, 2, 3, 4, 5, 6, 1, 2]).unwrap();
+        let matrix2 = Matrix::new(3, 3, vec![1, 9, 2, 7, 1, 5, 3, 8, 2]).unwrap();
+
+        assert_eq!(
+            matrix.trivial_product_matrix(&matrix2).unwrap().as_vec(),
+            &vec![14, 26, 11, 46, 71, 36, 19, 71, 21]
+        )
+    }
+
+    #[test]
+    fn matrix_trivial_matrix_product_nonsquare_test() {
+        let matrix = Matrix::new(3, 2, vec![3, 4, 5, 6, 1, 2]).unwrap();
+        let matrix2 = Matrix::new(2, 3, vec![7, 1, 5, 3, 8, 2]).unwrap();
+
+        assert_eq!(
+            matrix.trivial_product_matrix(&matrix2).unwrap().as_vec(),
+            &vec![81, 25, 63, 13]
+        )
+    }
+
+    #[test]
     fn transpose_nonsquare_test() {
         let matrix = Matrix::new(3, 2, vec![1, 2, 3, 4, 5, 6]).unwrap();
         assert_eq!(matrix.transpose().as_vec(), &vec![1, 4, 2, 5, 3, 6])
