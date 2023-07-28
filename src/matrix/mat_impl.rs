@@ -1,4 +1,4 @@
-use std::ops::{Add, Index, Mul};
+use std::ops::{Add, Index, Mul, IndexMut};
 
 use crate::{numlib::Zero, vector::Vector};
 
@@ -227,5 +227,11 @@ impl<T> Index<(usize, usize)> for Matrix<T> {
     type Output = T;
     fn index(&self, (row, col): (usize, usize)) -> &Self::Output {
         &self.data[row * self.width + col]
+    }
+}
+
+impl<T> IndexMut<(usize,usize)> for Matrix<T> {
+    fn index_mut(&mut self, (row, col): (usize, usize)) -> &mut T {
+        &mut self.data[row * self.width + col]
     }
 }

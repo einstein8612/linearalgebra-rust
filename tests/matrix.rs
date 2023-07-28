@@ -162,6 +162,14 @@ mod matrix_tests {
     }
 
     #[test]
+    fn indexed_mut_test() {
+        let mut matrix: Matrix<i32> = Matrix::new(3, 3, vec![4,5,1,2,3,1,5,1,9]).unwrap();
+        matrix[(2,1)] = 10;
+
+        assert_eq!(&vec![4, 5, 1, 2, 3, 1, 5, 10, 9], matrix.as_vec());
+    }
+
+    #[test]
     fn apply_test() {
         let mut matrix: Matrix<i32> = Matrix::new(3, 3, vec![4,5,1,2,3,1,5,1,9]).unwrap();
 
