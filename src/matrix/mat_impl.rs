@@ -1,4 +1,4 @@
-use std::ops::{Add, Index, Mul, IndexMut};
+use std::ops::{Add, Index, IndexMut, Mul};
 
 use crate::{numlib::Zero, vector::Vector};
 
@@ -128,7 +128,9 @@ impl<T: Copy> Matrix<T> {
     }
 }
 
-impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Output = T>> Matrix<T> {
+impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Output = T>>
+    Matrix<T>
+{
     pub fn product_vector(&self, vector: &Vector<T>) -> Result<Vector<T>, &'static str> {
         if self.width != vector.len() {
             return Err("Vector and matrix have mismatched sizes");
@@ -185,7 +187,7 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
             }
         }
 
-        Matrix::new(self.height, other.width, res)
+        Matrix::new(other.width, self.height, res)
     }
 
     pub fn add(&self, other: &Matrix<T>) -> Result<Matrix<T>, &'static str> {
@@ -196,7 +198,7 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
         let mut res: Vec<T> = Vec::with_capacity(self.size);
         for (i, element) in self.data.iter().enumerate() {
             res.push(*element + *other.data.get(i).unwrap());
-        };
+        }
 
         Matrix::new(self.width, self.height, res)
     }
@@ -209,16 +211,16 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
         let mut res: Vec<T> = Vec::with_capacity(self.size);
         for (i, element) in self.data.iter().enumerate() {
             res.push(*element - *other.data.get(i).unwrap());
-        };
+        }
 
         Matrix::new(self.width, self.height, res)
     }
 
     pub fn sum(&self) -> T {
         let mut accumulator: T = T::zero();
-        for el in self.data.iter(){
+        for el in self.data.iter() {
             accumulator = accumulator + *el;
-        };
+        }
         accumulator
     }
 }
@@ -230,7 +232,7 @@ impl<T> Index<(usize, usize)> for Matrix<T> {
     }
 }
 
-impl<T> IndexMut<(usize,usize)> for Matrix<T> {
+impl<T> IndexMut<(usize, usize)> for Matrix<T> {
     fn index_mut(&mut self, (row, col): (usize, usize)) -> &mut T {
         &mut self.data[row * self.width + col]
     }
