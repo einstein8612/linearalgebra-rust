@@ -223,6 +223,34 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
         }
         accumulator
     }
+
+    pub fn sum_columns(&self) -> Matrix<T> {
+        let mut sum = Vec::with_capacity(self.width);
+        for column in 0..self.width {
+            let mut accumulator: T = T::zero();
+            for k in 0..self.height {
+                accumulator = accumulator + self.data[k*self.width+column];
+            }
+            sum.push(accumulator);
+        }
+        
+        return Vector::new(sum);
+    }
+
+    pub fn sum_rows(&self) -> Vector<T> {
+        let mut sum = Vec::with_capacity(self.height);
+        for row in 0..self.height {
+            let mut accumulator: T = T::zero();
+            for k in 0..self.width {
+                accumulator = accumulator + self.data[row*self.width+k];
+            }
+            sum.push(accumulator);
+        }
+        
+        return Vector::new(sum);
+    }
+
+
 }
 
 impl<T> Index<(usize, usize)> for Matrix<T> {
