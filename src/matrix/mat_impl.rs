@@ -311,7 +311,7 @@ impl Matrix<f64> {
             })
             .collect_into_vec(&mut out);
 
-        Ok(Matrix::new(self.height(), other.width(), out).unwrap())
+        Ok(Matrix::new(other.width(), self.height(), out).unwrap())
     }
 }
 
