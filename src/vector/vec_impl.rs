@@ -27,6 +27,16 @@ impl<T> Vector<T> {
 }
 
 impl<T: Copy> Vector<T> {
+    pub fn new_of_supplier<F: FnMut() -> T>(
+        size: usize,
+        mut supplier: F,
+    ) -> Vector<T> {
+        Vector {
+            size,
+            data: (0..size).map(|_| supplier()).collect(),
+        }
+    }
+
     pub fn expand(&self, n: usize, axis: Axis) -> Matrix<T> {
         let expanded_matrix = Matrix::new(self.size, n, self.data.repeat(n)).unwrap();
 

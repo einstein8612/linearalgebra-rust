@@ -137,4 +137,10 @@ mod vector_tests {
         );
     }
 
+    #[test]
+    fn new_of_supplier_test() {
+        let v = Vector::new_of_supplier(10, || 10);
+
+        assert_eq!(&vec![10, 10, 10, 10, 10, 10, 10, 10, 10, 10], v.as_vec());
+    }
 }
