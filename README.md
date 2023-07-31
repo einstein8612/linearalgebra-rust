@@ -2,6 +2,9 @@
 
 Test project to learn Rust and implement a small library for linear algebra
 
+## Examples
+Examples can be found in the [examples](./tree/main/examples) directory.
+
 ## TODO List
 - Implement faster multiplication from einstein8612/mm-testing (Work in progress: first merge complete)
 - Element wise division/multiplication
