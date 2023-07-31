@@ -70,9 +70,9 @@ impl<T: Copy> Matrix<T> {
         })
     }
 
-    pub fn apply<F: FnMut(&mut T)>(&mut self, mut f: F) {
+    pub fn apply<F: Fn(&T) -> T>(&mut self, f: F) {
         for i in self.data.iter_mut() {
-            f(i);
+            *i = f(i);
         }
     }
 

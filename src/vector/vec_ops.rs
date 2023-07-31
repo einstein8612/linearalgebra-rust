@@ -5,11 +5,10 @@ use crate::numlib::Zero;
 use super::Vector;
 
 impl<T: Copy> Vector<T> {
-    pub fn apply(mut self, f: &dyn Fn(T) -> T) -> Vector<T> {
+    pub fn apply<F: Fn(&T) -> T>(&mut self, f: F) {
         for val in &mut self.data {
-            *val = f(*val);
+            *val = f(val);
         }
-        self
     }
 }
 
