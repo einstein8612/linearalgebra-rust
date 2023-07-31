@@ -243,6 +243,13 @@ mod matrix_tests {
     }
 
     #[test]
+    fn scalar_test() {
+        let matrix: Matrix<f64> = Matrix::new(2, 2, vec![9f64,2f64,3f64,4f64]).unwrap();
+        let sum: Matrix<f64> = matrix.scale(2.3);
+        assert_eq!(&vec![9.0*2.3,2.0*2.3,3.0*2.3,4.0*2.3], sum.as_vec());
+    }
+
+    #[test]
     fn test_test() {
         let matrix: Matrix<i32> = Matrix::new(2, 2, vec![-4, -6, -2, 6]).unwrap();
         let matrix2: Matrix<i32> = Matrix::new(2, 2, vec![0, 2, -1, -2]).unwrap();
