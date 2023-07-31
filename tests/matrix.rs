@@ -196,7 +196,7 @@ mod matrix_tests {
         let mut matrix: Matrix<i32> = Matrix::new(3, 3, vec![4,5,1,2,3,1,5,1,9]).unwrap();
 
         assert_eq!(3, matrix[(1,1)]);
-        matrix.apply(|x| *x = *x*2);
+        matrix.apply(|&x| x*2);
         assert_eq!(6, matrix[(1,1)]);
     }
 

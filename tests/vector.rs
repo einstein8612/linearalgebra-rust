@@ -104,4 +104,12 @@ mod vector_tests {
 
         assert_eq!(v.abs(), 5.0);
     }
+
+    #[test]
+    fn apply_test() {
+        let mut v = Vector::new(vec![3.0,4.0]);
+        v.apply(|&x| x*2.0);
+
+        assert_eq!(&vec![6.0, 8.0], v.as_vec());
+    }
 }
