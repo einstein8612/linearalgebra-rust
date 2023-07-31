@@ -15,4 +15,4 @@ Test project to learn Rust and implement a small library for linear algebra
 - Make shape displayable
 - Scale matrix by float64 :heavy_check_mark:
 - Apply for matrices should be like the vector apply in syntax :heavy_check_mark:
-- Method for expanding vector into matrix
+- Method for expanding vector into matrix :heavy_check_mark:
