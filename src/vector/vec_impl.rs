@@ -1,4 +1,4 @@
-use crate::numlib::{Zero, One};
+use crate::{numlib::{Zero, One}, matrix::Matrix};
 
 use super::Vector;
 
@@ -20,6 +20,12 @@ impl<T> Vector<T> {
 
     pub const fn len(&self) -> usize {
         self.size
+    }
+}
+
+impl<T: Copy> Vector<T> {
+    pub fn expand(&self, n: usize) -> Matrix<T> {
+        Matrix::new(self.size, n, self.data.repeat(n)).unwrap().transpose()
     }
 }
 
