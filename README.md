@@ -13,3 +13,6 @@ Test project to learn Rust and implement a small library for linear algebra
 - Add matrix area
 - Improve transpose
 - Make shape displayable
+- Scale matrix by float64
+- Apply for matrices should be like the vector apply in syntax
+- Method for expanding vector into matrix
