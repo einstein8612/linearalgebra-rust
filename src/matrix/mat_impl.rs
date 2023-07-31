@@ -1,8 +1,16 @@
-use std::ops::{Add, Index, IndexMut, Mul};
+extern crate rayon;
 
-use crate::{numlib::Zero, vector::Vector};
+use std::{
+    ops::{Add, Index, IndexMut, Mul},
+    simd::{Simd, SimdFloat},
+};
+
+use rayon::prelude::*;
 
 use super::Matrix;
+use crate::{numlib::Zero, vector::Vector};
+
+const CHUNK_SIZE: usize = 8usize;
 
 impl<T> Matrix<T> {
     pub fn new(width: usize, height: usize, data: Vec<T>) -> Result<Matrix<T>, &'static str> {
@@ -144,13 +152,17 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
     }
 
     pub fn product_matrix(&self, other: &Matrix<T>) -> Result<Matrix<T>, &'static str> {
-        self.simple_product_matrix(other)
+        self.trivial_product_matrix(other)
     }
 
     /**
      * A simple multiplication algorithm using the provided methods
      * for short and readable code
      */
+    #[deprecated(
+        since = "0.1.7",
+        note = "simple_product_matrix is a slower method use product_matrix to use the fastest algorithm"
+    )]
     pub fn simple_product_matrix(&self, other: &Matrix<T>) -> Result<Matrix<T>, &'static str> {
         if self.width != other.height {
             return Err("Matrices have mismatched sizes");
@@ -229,11 +241,11 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
         for column in 0..self.width {
             let mut accumulator: T = T::zero();
             for k in 0..self.height {
-                accumulator = accumulator + self.data[k*self.width+column];
+                accumulator = accumulator + self.data[k * self.width + column];
             }
             sum.push(accumulator);
         }
-        
+
         return Matrix::new(self.width, 1, sum).unwrap();
     }
 
@@ -242,15 +254,65 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
         for row in 0..self.height {
             let mut accumulator: T = T::zero();
             for k in 0..self.width {
-                accumulator = accumulator + self.data[row*self.width+k];
+                accumulator = accumulator + self.data[row * self.width + k];
             }
             sum.push(accumulator);
         }
-        
+
         return Vector::new(sum);
     }
+}
 
+// impl<T: Zero + SimdElement + SimdFloat> Matrix<T> where Simd<T, 8>: AddAssign +  Mul<Output = Simd<T,8>>{
+impl Matrix<f64> {
+    pub fn simd_product_matrix(
+        &self,
+        other: &Matrix<f64>,
+    ) -> Result<Matrix<f64>, &'static str> {
+        let data = &self.data;
+        let mut out: Vec<f64> = vec![];
 
+        let mut transposed_b = vec![0f64; other.width() * other.height()];
+        for i in 0..other.height() {
+            for j in 0..other.width() {
+                transposed_b[j * other.height() + i] = other[(i, j)];
+            }
+        }
+
+        let chunks = self.width() / CHUNK_SIZE;
+        let left = chunks * CHUNK_SIZE;
+
+        (0..self.height() * other.width())
+            .into_par_iter()
+            .map(|index| {
+                let row = index / other.width();
+                let column = index % other.width();
+
+                let mut total_simd = Simd::<f64, 8>::splat(0f64);
+                for k in 0..chunks {
+                    let simd_a = Simd::from_slice(&data[row * self.width() + k * CHUNK_SIZE..]);
+                    let simd_b =
+                        Simd::from_slice(&transposed_b[column * other.height() + k * CHUNK_SIZE..]);
+
+                    let multiplied = simd_a * simd_b;
+                    total_simd += multiplied;
+                }
+
+                let mut a_simd = Simd::splat(0f64);
+                let mut b_simd = Simd::splat(0f64);
+
+                for k in left..self.width() {
+                    a_simd[k - left] = data[row * self.width() + k];
+                    b_simd[k - left] = transposed_b[column * other.height() + k];
+                }
+
+                total_simd += a_simd * b_simd;
+                total_simd.reduce_sum()
+            })
+            .collect_into_vec(&mut out);
+
+        Ok(Matrix::new(self.height(), other.width(), out).unwrap())
+    }
 }
 
 impl<T> Index<(usize, usize)> for Matrix<T> {

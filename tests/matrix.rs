@@ -95,23 +95,23 @@ mod matrix_tests {
 
     #[test]
     fn matrix_trivial_matrix_product_test() {
-        let matrix = Matrix::new(3, 3, vec![1, 1, 2, 3, 4, 5, 6, 1, 2]).unwrap();
-        let matrix2 = Matrix::new(3, 3, vec![1, 9, 2, 7, 1, 5, 3, 8, 2]).unwrap();
+        let matrix = Matrix::new(3, 3, vec![1f64, 1f64, 2f64, 3f64, 4f64, 5f64, 6f64, 1f64, 2f64]).unwrap();
+        let matrix2 = Matrix::new(3, 3, vec![1f64, 9f64, 2f64, 7f64, 1f64, 5f64, 3f64, 8f64, 2f64]).unwrap();
 
         assert_eq!(
-            matrix.trivial_product_matrix(&matrix2).unwrap().as_vec(),
-            &vec![14, 26, 11, 46, 71, 36, 19, 71, 21]
+            matrix.simd_product_matrix(&matrix2).unwrap().as_vec(),
+            &vec![14f64, 26f64, 11f64, 46f64, 71f64, 36f64, 19f64, 71f64, 21f64]
         )
     }
 
     #[test]
     fn matrix_trivial_matrix_product_nonsquare_test() {
-        let matrix = Matrix::new(3, 2, vec![3, 4, 5, 6, 1, 2]).unwrap();
-        let matrix2 = Matrix::new(2, 3, vec![7, 1, 5, 3, 8, 2]).unwrap();
+        let matrix = Matrix::new(3, 2, vec![3f64, 4f64, 5f64, 6f64, 1f64, 2f64]).unwrap();
+        let matrix2 = Matrix::new(2, 3, vec![7f64, 1f64, 5f64, 3f64, 8f64, 2f64]).unwrap();
 
         assert_eq!(
-            matrix.trivial_product_matrix(&matrix2).unwrap().as_vec(),
-            &vec![81, 25, 63, 13]
+            matrix.simd_product_matrix(&matrix2).unwrap().as_vec(),
+            &vec![81f64, 25f64, 63f64, 13f64]
         )
     }
 
