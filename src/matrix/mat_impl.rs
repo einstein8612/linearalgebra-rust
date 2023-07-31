@@ -43,6 +43,16 @@ impl<T> Matrix<T> {
     }
 }
 
+impl<T: PartialOrd + Copy> Matrix<T> {
+    pub fn max(&self) -> T {
+        *self.data.iter().max_by(|a,b| a.partial_cmp(b).unwrap()).unwrap()
+    }
+
+    pub fn min(&self) -> T {
+        *self.data.iter().min_by(|a,b| a.partial_cmp(b).unwrap()).unwrap()
+    }
+}
+
 impl<T: Copy> Matrix<T> {
     pub fn new_of_element(
         width: usize,

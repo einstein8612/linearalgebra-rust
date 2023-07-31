@@ -95,8 +95,18 @@ mod matrix_tests {
 
     #[test]
     fn matrix_trivial_matrix_product_test() {
-        let matrix = Matrix::new(3, 3, vec![1f64, 1f64, 2f64, 3f64, 4f64, 5f64, 6f64, 1f64, 2f64]).unwrap();
-        let matrix2 = Matrix::new(3, 3, vec![1f64, 9f64, 2f64, 7f64, 1f64, 5f64, 3f64, 8f64, 2f64]).unwrap();
+        let matrix = Matrix::new(
+            3,
+            3,
+            vec![1f64, 1f64, 2f64, 3f64, 4f64, 5f64, 6f64, 1f64, 2f64],
+        )
+        .unwrap();
+        let matrix2 = Matrix::new(
+            3,
+            3,
+            vec![1f64, 9f64, 2f64, 7f64, 1f64, 5f64, 3f64, 8f64, 2f64],
+        )
+        .unwrap();
 
         assert_eq!(
             matrix.simd_product_matrix(&matrix2).unwrap().as_vec(),
@@ -165,7 +175,10 @@ mod matrix_tests {
     fn display_unequal_length_3x2_test() {
         let matrix = Matrix::new(2, 3, vec![1, 20, 3, 1, 0, 9]).unwrap();
 
-        assert_eq!("┌       ┐\n│ 1  20 │\n│ 3  1  │\n│ 0  9  │\n└       ┘", matrix.to_string())
+        assert_eq!(
+            "┌       ┐\n│ 1  20 │\n│ 3  1  │\n│ 0  9  │\n└       ┘",
+            matrix.to_string()
+        )
     }
 
     #[test]
@@ -177,83 +190,90 @@ mod matrix_tests {
 
     #[test]
     fn indexed_access_test() {
-        let matrix: Matrix<i32> = Matrix::new(3, 3, vec![4,5,1,2,3,1,5,1,9]).unwrap();
+        let matrix: Matrix<i32> = Matrix::new(3, 3, vec![4, 5, 1, 2, 3, 1, 5, 1, 9]).unwrap();
 
-        assert_eq!(3, matrix[(1,1)]);
-        assert_eq!(3, *matrix.index((1,1)))
+        assert_eq!(3, matrix[(1, 1)]);
+        assert_eq!(3, *matrix.index((1, 1)))
     }
 
     #[test]
     fn indexed_mut_test() {
-        let mut matrix: Matrix<i32> = Matrix::new(3, 3, vec![4,5,1,2,3,1,5,1,9]).unwrap();
-        matrix[(2,1)] = 10;
+        let mut matrix: Matrix<i32> = Matrix::new(3, 3, vec![4, 5, 1, 2, 3, 1, 5, 1, 9]).unwrap();
+        matrix[(2, 1)] = 10;
 
         assert_eq!(&vec![4, 5, 1, 2, 3, 1, 5, 10, 9], matrix.as_vec());
     }
 
     #[test]
     fn apply_test() {
-        let mut matrix: Matrix<i32> = Matrix::new(3, 3, vec![4,5,1,2,3,1,5,1,9]).unwrap();
+        let mut matrix: Matrix<i32> = Matrix::new(3, 3, vec![4, 5, 1, 2, 3, 1, 5, 1, 9]).unwrap();
 
-        assert_eq!(3, matrix[(1,1)]);
-        matrix.apply(|&x| x*2);
-        assert_eq!(6, matrix[(1,1)]);
+        assert_eq!(3, matrix[(1, 1)]);
+        matrix.apply(|&x| x * 2);
+        assert_eq!(6, matrix[(1, 1)]);
     }
 
     #[test]
     fn supplier_test() {
         let matrix: Matrix<i32> = Matrix::new_of_supplier(3, 3, || 10).unwrap();
-        assert_eq!(&vec![10;9], matrix.as_vec())
+        assert_eq!(&vec![10; 9], matrix.as_vec())
     }
 
     #[test]
     fn add_test() {
-        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![1,2,3,4]).unwrap();
-        let matrix_2: Matrix<i32> = Matrix::new(2, 2, vec![3,2,1,4]).unwrap();
-        assert_eq!(&vec![4,4,4,8], matrix.add(&matrix_2).unwrap().as_vec())
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
+        let matrix_2: Matrix<i32> = Matrix::new(2, 2, vec![3, 2, 1, 4]).unwrap();
+        assert_eq!(&vec![4, 4, 4, 8], matrix.add(&matrix_2).unwrap().as_vec())
     }
 
     #[test]
     fn sub_test() {
-        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![1,2,3,4]).unwrap();
-        let matrix_2: Matrix<i32> = Matrix::new(2, 2, vec![3,2,1,4]).unwrap();
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
+        let matrix_2: Matrix<i32> = Matrix::new(2, 2, vec![3, 2, 1, 4]).unwrap();
 
         assert_eq!(&vec![-2, 0, 2, 0], matrix.sub(&matrix_2).unwrap().as_vec())
     }
 
     #[test]
     fn sum_test() {
-        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![9,2,3,4]).unwrap();
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![9, 2, 3, 4]).unwrap();
         assert_eq!(18, matrix.sum())
     }
 
     #[test]
     fn sum_columns_test() {
-        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![9,2,3,4]).unwrap();
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![9, 2, 3, 4]).unwrap();
         let sum = matrix.sum_columns();
-        assert_eq!(&vec![12,6], sum.as_vec());
-        assert_eq!((1,2), sum.shape())
+        assert_eq!(&vec![12, 6], sum.as_vec());
+        assert_eq!((1, 2), sum.shape())
     }
 
     #[test]
     fn sum_rows_test() {
-        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![9,2,3,4]).unwrap();
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![9, 2, 3, 4]).unwrap();
         let sum = matrix.sum_rows();
-        assert_eq!(&vec![11,7], sum.as_vec());
+        assert_eq!(&vec![11, 7], sum.as_vec())
     }
 
     #[test]
     fn scalar_test() {
-        let matrix: Matrix<f64> = Matrix::new(2, 2, vec![9f64,2f64,3f64,4f64]).unwrap();
+        let matrix: Matrix<f64> = Matrix::new(2, 2, vec![9f64, 2f64, 3f64, 4f64]).unwrap();
         let sum: Matrix<f64> = matrix.scale(2.3);
-        assert_eq!(&vec![9.0*2.3,2.0*2.3,3.0*2.3,4.0*2.3], sum.as_vec());
+        assert_eq!(
+            &vec![9.0 * 2.3, 2.0 * 2.3, 3.0 * 2.3, 4.0 * 2.3],
+            sum.as_vec()
+        )
     }
 
     #[test]
-    fn test_test() {
+    fn max_test() {
         let matrix: Matrix<i32> = Matrix::new(2, 2, vec![-4, -6, -2, 6]).unwrap();
-        let matrix2: Matrix<i32> = Matrix::new(2, 2, vec![0, 2, -1, -2]).unwrap();
+        assert_eq!(6, matrix.max())
+    }
 
-        println!("{}", matrix2.product_matrix(&matrix).unwrap())
+    #[test]
+    fn min_test() {
+        let matrix: Matrix<i32> = Matrix::new(2, 2, vec![-4, -6, -2, 6]).unwrap();
+        assert_eq!(-6, matrix.min())
     }
 }
