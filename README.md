@@ -12,3 +12,4 @@ Test project to learn Rust and implement a small library for linear algebra
 - Add one hot method
 - Add matrix area
 - Improve transpose
+- Make shape displayable
