@@ -114,9 +114,9 @@ mod vector_tests {
     }
 
     #[test]
-    fn expand_test() {
+    fn expand_column_test() {
         let v = Vector::new(vec![3.0, 4.0]);
-        let expanded = v.expand(4);
+        let expanded = v.expand(4, Axis::Column);
 
         assert_eq!((2, 4), expanded.shape());
         assert_eq!(
@@ -124,4 +124,17 @@ mod vector_tests {
             expanded.as_vec()
         );
     }
+
+    #[test]
+    fn expand_row_test() {
+        let v = Vector::new(vec![3.0, 4.0]);
+        let expanded = v.expand(4, Axis::Row);
+
+        assert_eq!((4, 2), expanded.shape());
+        assert_eq!(
+            &vec![3.0, 4.0, 3.0, 4.0, 3.0, 4.0, 3.0, 4.0],
+            expanded.as_vec()
+        );
+    }
+
 }
