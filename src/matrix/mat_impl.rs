@@ -261,6 +261,13 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
 
         return Vector::new(sum);
     }
+
+    pub fn scale(&self, scalar: T) -> Matrix<T> {
+        let mut scaled = self.clone();
+        scaled.apply(|x| *x = *x*scalar);
+
+        scaled
+    }
 }
 
 // impl<T: Zero + SimdElement + SimdFloat> Matrix<T> where Simd<T, 8>: AddAssign +  Mul<Output = Simd<T,8>>{
