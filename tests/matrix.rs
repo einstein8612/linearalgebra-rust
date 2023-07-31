@@ -215,7 +215,7 @@ mod matrix_tests {
 
     #[test]
     fn supplier_test() {
-        let matrix: Matrix<i32> = Matrix::new_of_supplier(3, 3, || 10).unwrap();
+        let matrix: Matrix<i32> = Matrix::new_of_supplier(3, 3, || 10);
         assert_eq!(&vec![10; 9], matrix.as_vec())
     }
 
