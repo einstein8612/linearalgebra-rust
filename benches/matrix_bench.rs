@@ -70,6 +70,19 @@ fn matrix_trivial_multiplication_small_bench(b: &mut Bencher) {
     })
 }
 
+#[bench]
+fn matrix_multiplication_big_bench(b: &mut Bencher) {
+
+    let (m1,m2) = setup(1024*1024);
+
+    let matrix1 = Matrix::new(1024, 1024, m1).unwrap();
+    let matrix2 = Matrix::new(1024, 1024, m2).unwrap();
+
+    b.iter(|| {
+        let _ = matrix1.simd_product_matrix(&matrix2);
+    })
+}
+
 #[test]
 fn big_matrix_multiplication_test() {
     let pre_random = Instant::now();
