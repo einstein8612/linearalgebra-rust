@@ -264,7 +264,7 @@ impl<T: Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + std::ops::Sub<Ou
 
     pub fn scale(&self, scalar: T) -> Matrix<T> {
         let mut scaled = self.clone();
-        scaled.apply(|x| *x = *x*scalar);
+        scaled.apply(|&x| x*scalar);
 
         scaled
     }
