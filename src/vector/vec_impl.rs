@@ -1,6 +1,9 @@
-use crate::{numlib::{Zero, One}, matrix::Matrix};
+use crate::{
+    matrix::Matrix,
+    numlib::{One, Zero},
+};
 
-use super::Vector;
+use super::{Vector, Axis};
 
 impl<T> Vector<T> {
     pub fn new(data: Vec<T>) -> Self {
@@ -24,8 +27,13 @@ impl<T> Vector<T> {
 }
 
 impl<T: Copy> Vector<T> {
-    pub fn expand(&self, n: usize) -> Matrix<T> {
-        Matrix::new(self.size, n, self.data.repeat(n)).unwrap().transpose()
+    pub fn expand(&self, n: usize, axis: Axis) -> Matrix<T> {
+        let expanded_matrix = Matrix::new(self.size, n, self.data.repeat(n)).unwrap();
+
+        match axis {
+            Axis::Column => expanded_matrix.transpose(),
+            Axis::Row => expanded_matrix,
+        }
     }
 }
 
