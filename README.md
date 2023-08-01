@@ -1,4 +1,8 @@
 # linearalgebra-rust
+![Crates.io](https://img.shields.io/crates/v/linearalgebra)
+![docs.rs](https://img.shields.io/docsrs/linearalgebra)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/einstein8612/linearalgebra-rust/rust.yml)
+![Crates.io](https://img.shields.io/crates/d/linearalgebra)
 
 Test project to learn Rust and implement a small library for linear algebra
 
