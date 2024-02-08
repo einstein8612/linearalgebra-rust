@@ -1,4 +1,5 @@
 mod mat_impl;
+mod mat_mul;
 mod mat_display;
 
 #[cfg(feature = "fast")]
