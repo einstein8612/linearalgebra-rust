@@ -14,6 +14,10 @@ impl<T: Send + Sync + Zero + SimdElement + AddAssign> Matrix<T> where Simd<T, 8>
             &self,
             other: &Matrix<T>,
         ) -> Result<Matrix<T>, &'static str> {
+            if self.width != other.height {
+                return Err("Matrices have mismatched sizes");
+            }
+
             let data = &self.data;
 
             let mut transposed_b = Vec::with_capacity(other.size);
@@ -27,10 +31,10 @@ impl<T: Send + Sync + Zero + SimdElement + AddAssign> Matrix<T> where Simd<T, 8>
             let left = chunks * CHUNK_SIZE;
     
             let res = (0..self.height() * other.width())
-                .into_par_iter()
+                .into_iter()
                 .map(|index| {
                     let row = index / other.width();
-                    let column = index % self.height();
+                    let column = index % other.width();
     
                     let mut total_simd = Simd::<T, CHUNK_SIZE>::splat(T::zero());
                     for k in 0..chunks {

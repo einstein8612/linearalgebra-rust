@@ -30,7 +30,7 @@ impl<T: Send + Sync + Copy + Zero + Add<T, Output = T> + Mul<T, Output = T> + st
             .into_par_iter()
             .map(|index| {
                 let row = index / other.width();
-                let col = index % self.height();
+                let col = index % other.width();
 
                 let mut entry = T::zero();
                 for index in 0..self.width {

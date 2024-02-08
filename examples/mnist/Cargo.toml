@@ -6,6 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-linearalgebra = { git = "https://github.com/einstein8612/linearalgebra-rust", features=["simd"] }
+linearalgebra = { path = "../../", features=["simd"] }
 rand = "0.8.5"
 csv = "1.2"
