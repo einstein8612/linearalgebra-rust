@@ -2,20 +2,16 @@ pub trait Zero {
     fn zero() -> Self;
 }
 
-impl Zero for u8 {
-    fn zero() -> u8 {
-        0
+macro_rules! impl_Zero {
+    (for $($t:ty),+) => {
+        $(impl Zero for $t {
+            fn zero() -> $t {
+                0 as $t
+            }
+        })*
     }
 }
 
-impl Zero for i32 {
-    fn zero() -> i32 {
-        return 0i32;
-    }
-}
-
-impl Zero for f64 {
-    fn zero() -> f64 {
-        return 0f64;
-    }
-}
+impl_Zero!(for u8, u16, u32, u64, u128, usize);
+impl_Zero!(for i8, i16, i32, i64, i128, isize);
+impl_Zero!(for f32, f64);
