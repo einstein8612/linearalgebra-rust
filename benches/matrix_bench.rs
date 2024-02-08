@@ -71,7 +71,7 @@ fn matrix_trivial_multiplication_small_bench(b: &mut Bencher) {
 }
 
 #[bench]
-fn matrix_multiplication_big_bench(b: &mut Bencher) {
+fn matrix_multiplication_1k_bench(b: &mut Bencher) {
 
     let (m1,m2) = setup(1024*1024);
 
@@ -80,6 +80,19 @@ fn matrix_multiplication_big_bench(b: &mut Bencher) {
 
     b.iter(|| {
         let _ = matrix1.simd_product_matrix(&matrix2);
+    })
+}
+
+#[bench]
+fn matrix_multiplication_384_bench(b: &mut Bencher) {
+
+    let (m1,m2) = setup(384 * 384);
+
+    let matrix1 = Matrix::new(384, 384, m1).unwrap();
+    let matrix2 = Matrix::new(384, 384, m2).unwrap();
+
+    b.iter(|| {
+        matrix1.product_matrix(&matrix2)
     })
 }
 
@@ -96,4 +109,32 @@ fn big_matrix_multiplication_test() {
     matrix1.product_matrix(&matrix2);
 
     println!("{}", multiplication.elapsed().as_millis())
+}
+
+#[bench]
+fn simd_f64_matrix_multiplication_384_bench(b: &mut Bencher) {
+
+    let (m1,m2) = setup(384 * 384);
+
+    let matrix1 = Matrix::new(384, 384, m1).unwrap();
+    let matrix2 = Matrix::new(384, 384, m2).unwrap();
+
+    b.iter(|| {
+        matrix1.simd_product_matrix(&matrix2)
+    })
+}
+
+#[bench]
+fn simd_f32_matrix_multiplication_384_bench(b: &mut Bencher) {
+
+    let (m1,m2) = setup(384 * 384);
+    let m1_32: Vec<f32> = m1.iter().map(|x| *x as f32).collect();
+    let m2_32: Vec<f32> = m2.iter().map(|x| *x as f32).collect();
+
+    let matrix1 = Matrix::new(384, 384, m1_32).unwrap();
+    let matrix2 = Matrix::new(384, 384, m2_32).unwrap();
+
+    b.iter(|| {
+        matrix1.simd_product_matrix(&matrix2)
+    })
 }
